@@ -120,6 +120,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const btnText = button.querySelector('.copy-btn-text');
         btnText.textContent = '已复制！';
         
+        // 更改图标为对钩图标
+        const icon = button.querySelector('.material-icons');
+        icon.textContent = 'check';
+        
         // 改变按钮样式
         button.style.backgroundColor = 'var(--primary-color)';
         button.style.color = 'white';
@@ -159,6 +163,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // 恢复按钮文字
     const btnText = button.querySelector('.copy-btn-text');
     btnText.textContent = btnText.dataset.originalText;
+    
+    // 恢复图标
+    const icon = button.querySelector('.material-icons');
+    icon.textContent = 'content_copy';
     
     // 删除波纹效果
     const ripple = button.querySelector('.btn-ripple-effect');
