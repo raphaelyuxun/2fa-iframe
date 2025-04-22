@@ -3,6 +3,10 @@
 # Exit on any error
 set -e
 
+# Get the absolute path of the project root directory
+PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+echo "Project root: ${PROJECT_ROOT}"
+
 # Update system packages
 echo "Updating system packages..."
 apt-get update
@@ -19,12 +23,12 @@ mkdir -p /var/www/2fa-iframe/public
 
 # Copy server files
 echo "Copying server files..."
-cp -r ./server/server.js /opt/2fa-iframe/server/
-cp -r ./server/package.json /opt/2fa-iframe/server/
+cp -r "${PROJECT_ROOT}/server/server.js" /opt/2fa-iframe/server/
+cp -r "${PROJECT_ROOT}/server/package.json" /opt/2fa-iframe/server/
 
 # Copy public files
 echo "Copying public files..."
-cp -r ./public/* /var/www/2fa-iframe/public/
+cp -r "${PROJECT_ROOT}/public/"* /var/www/2fa-iframe/public/
 
 # Install Node.js dependencies
 echo "Installing Node.js dependencies..."
@@ -33,7 +37,7 @@ npm install --production
 
 # Setup Nginx configuration
 echo "Setting up Nginx configuration..."
-cp ./server/nginx.conf /etc/nginx/sites-available/2fa-iframe
+cp "${PROJECT_ROOT}/server/nginx.conf" /etc/nginx/sites-available/2fa-iframe
 ln -sf /etc/nginx/sites-available/2fa-iframe /etc/nginx/sites-enabled/
 
 # Remove default Nginx site if it exists
@@ -47,7 +51,7 @@ certbot --nginx -d kocboost.com --non-interactive --agree-tos -m admin@kocboost.
 
 # Setup systemd service
 echo "Setting up systemd service..."
-cp ./server/2fa-iframe.service /etc/systemd/system/
+cp "${PROJECT_ROOT}/server/2fa-iframe.service" /etc/systemd/system/
 
 # Reload systemd, enable and start services
 echo "Starting services..."
