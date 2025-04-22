@@ -8,7 +8,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const tabButtons = document.querySelectorAll('.tab');
   const tabContents = document.querySelectorAll('.tab-content');
   const qrFileInput = document.getElementById('qr-file');
-  const captureScreenButton = document.getElementById('capture-screen');
+  const pasteContainer = document.getElementById('paste-container');
+  const pastedImage = document.getElementById('pasted-image');
+  const processClipboardButton = document.getElementById('process-clipboard');
   const qrResultContainer = document.getElementById('qr-result-container');
   const qrTokenNameInput = document.getElementById('qr-token-name');
   const qrTokenNoteInput = document.getElementById('qr-token-note');
@@ -19,19 +21,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const modalQrCode = document.getElementById('modal-qr-code');
   const modalCloseButtons = document.querySelectorAll('#close-modal, #modal-close');
   const modalCopySecretButton = document.getElementById('modal-copy-secret');
-  const scannerModal = document.getElementById('scanner-modal');
-  const screenshotContainer = document.getElementById('screenshot-container');
-  const selectionArea = document.getElementById('selection-area');
-  const closeScannerModalButton = document.getElementById('close-scanner-modal');
-  const cancelScreenshotButton = document.getElementById('cancel-screenshot');
-  const captureSelectionButton = document.getElementById('capture-selection');
 
   let currentTokens = [];
-  let draggedItem = null;
-  let isSelecting = false;
-  let selectionStart = { x: 0, y: 0 };
-  let selectionEnd = { x: 0, y: 0 };
-  let screenshotImage = null;
+  let clipboardImage = null;
 
   // Fetch and display tokens
   fetchTokens();
@@ -54,13 +46,20 @@ document.addEventListener('DOMContentLoaded', function() {
   addTokenForm.addEventListener('submit', handleTokenSubmit);
   tabButtons.forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
   qrFileInput.addEventListener('change', handleQrFileUpload);
-  captureScreenButton.addEventListener('click', openScreenshotModal);
+  processClipboardButton.addEventListener('click', processClipboardImage);
   addQrTokenButton.addEventListener('click', handleQrTokenSubmit);
   modalCloseButtons.forEach(btn => btn.addEventListener('click', () => closeModal(secretModal)));
   modalCopySecretButton.addEventListener('click', copySecretToClipboard);
-  closeScannerModalButton.addEventListener('click', () => closeModal(scannerModal));
-  cancelScreenshotButton.addEventListener('click', () => closeModal(scannerModal));
-  captureSelectionButton.addEventListener('click', processScreenshotSelection);
+
+  // Setup paste event listeners
+  document.addEventListener('paste', handlePaste);
+  pasteContainer.addEventListener('click', function() {
+    // Create a temporary input element to trigger the paste dialog
+    const temp = document.createElement('input');
+    document.body.appendChild(temp);
+    temp.focus();
+    document.body.removeChild(temp);
+  });
 
   // Event delegation for token list interactions
   tokenList.addEventListener('click', handleTokenListClick);
@@ -144,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
     qrTokenNoteInput.value = '';
     qrTokenSecretDisplay.textContent = '';
     qrResultContainer.style.display = 'none';
+    resetPasteArea();
     switchTab('manual');
   }
 
@@ -329,6 +329,49 @@ document.addEventListener('DOMContentLoaded', function() {
     reader.readAsDataURL(file);
   }
 
+  function handlePaste(e) {
+    // Check if we're in the QR code tab
+    const qrcodeTab = document.querySelector('.tab-content#qrcode.active');
+    if (!qrcodeTab) return;
+    
+    // Get clipboard items
+    const items = e.clipboardData.items;
+    
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const blob = items[i].getAsFile();
+        const reader = new FileReader();
+        
+        reader.onload = function(event) {
+          // Display the pasted image
+          pastedImage.src = event.target.result;
+          pastedImage.style.display = 'block';
+          pasteContainer.classList.add('has-image');
+          clipboardImage = event.target.result;
+        };
+        
+        reader.readAsDataURL(blob);
+        break;
+      }
+    }
+  }
+  
+  function processClipboardImage() {
+    if (!clipboardImage) {
+      alert('Please paste an image first (Ctrl+V or ⌘+V)');
+      return;
+    }
+    
+    processQrCodeImage(clipboardImage);
+  }
+
+  function resetPasteArea() {
+    pastedImage.src = '';
+    pastedImage.style.display = 'none';
+    pasteContainer.classList.remove('has-image');
+    clipboardImage = null;
+  }
+
   function processQrCodeImage(imageUrl) {
     const image = new Image();
     image.onload = function() {
@@ -379,112 +422,6 @@ document.addEventListener('DOMContentLoaded', function() {
     } catch (error) {
       console.error('Error processing QR code:', error);
       alert('Invalid QR code. Please make sure it\'s a valid 2FA QR code.');
-    }
-  }
-
-  function openScreenshotModal() {
-    // Take a screenshot of the current page
-    html2canvas(document.body).then(canvas => {
-      screenshotImage = canvas;
-      
-      // Clear previous screenshot
-      screenshotContainer.innerHTML = '';
-      screenshotContainer.appendChild(canvas);
-      canvas.style.width = '100%';
-      canvas.style.height = 'auto';
-      
-      // Setup selection events
-      setupScreenshotSelection(canvas);
-      
-      // Show the modal
-      openModal(scannerModal);
-    });
-  }
-
-  function setupScreenshotSelection(canvas) {
-    canvas.addEventListener('mousedown', startSelection);
-    canvas.addEventListener('mousemove', updateSelection);
-    canvas.addEventListener('mouseup', endSelection);
-  }
-
-  function startSelection(e) {
-    isSelecting = true;
-    
-    // Calculate position relative to the canvas
-    const rect = e.target.getBoundingClientRect();
-    selectionStart.x = e.clientX - rect.left;
-    selectionStart.y = e.clientY - rect.top;
-    
-    // Reset selection area
-    selectionArea.style.left = `${selectionStart.x}px`;
-    selectionArea.style.top = `${selectionStart.y}px`;
-    selectionArea.style.width = '0px';
-    selectionArea.style.height = '0px';
-    selectionArea.style.display = 'block';
-  }
-
-  function updateSelection(e) {
-    if (!isSelecting) return;
-    
-    // Calculate position relative to the canvas
-    const rect = e.target.getBoundingClientRect();
-    selectionEnd.x = e.clientX - rect.left;
-    selectionEnd.y = e.clientY - rect.top;
-    
-    // Calculate dimensions
-    const width = Math.abs(selectionEnd.x - selectionStart.x);
-    const height = Math.abs(selectionEnd.y - selectionStart.y);
-    
-    // Calculate top-left corner
-    const left = Math.min(selectionStart.x, selectionEnd.x);
-    const top = Math.min(selectionStart.y, selectionEnd.y);
-    
-    // Update selection area
-    selectionArea.style.left = `${left}px`;
-    selectionArea.style.top = `${top}px`;
-    selectionArea.style.width = `${width}px`;
-    selectionArea.style.height = `${height}px`;
-  }
-
-  function endSelection() {
-    isSelecting = false;
-  }
-
-  function processScreenshotSelection() {
-    if (!screenshotImage) return;
-    
-    // Get the selection coordinates
-    const left = parseInt(selectionArea.style.left);
-    const top = parseInt(selectionArea.style.top);
-    const width = parseInt(selectionArea.style.width);
-    const height = parseInt(selectionArea.style.height);
-    
-    // Check if selection is valid
-    if (width < 50 || height < 50) {
-      alert('Selection area is too small. Please select a larger area.');
-      return;
-    }
-    
-    // Create a canvas for the selected region
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = width;
-    canvas.height = height;
-    ctx.drawImage(
-      screenshotImage,
-      left, top, width, height,
-      0, 0, width, height
-    );
-    
-    // Process the selected area as a QR code
-    const imageData = ctx.getImageData(0, 0, width, height);
-    const code = jsQR(imageData.data, imageData.width, imageData.height);
-    
-    if (code) {
-      processQrCodeResult(code.data);
-      closeModal(scannerModal);
-    } else {
-      alert('No QR code found in the selected area. Please try again.');
     }
   }
 

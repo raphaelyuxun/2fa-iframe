@@ -519,4 +519,50 @@ body {
   to {
     transform: rotate(360deg);
   }
+}
+
+.paste-area {
+  min-height: 150px;
+  border: 2px dashed var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+  transition: all var(--transition-duration) ease;
+  position: relative;
+}
+
+.paste-area:hover {
+  border-color: var(--primary-color);
+  background-color: rgba(26, 115, 232, 0.04);
+}
+
+.paste-area:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+
+.paste-instruction {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.paste-instruction .material-icons {
+  font-size: 48px;
+  margin-bottom: 8px;
+  color: var(--border-color);
+}
+
+.paste-area.has-image .paste-instruction {
+  display: none;
+}
+
+.paste-area.has-image {
+  padding: 0;
 } 

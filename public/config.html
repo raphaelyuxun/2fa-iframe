@@ -44,15 +44,21 @@
 
         <div class="tab-content" id="qrcode">
           <div class="form-group">
-            <label class="form-label">Upload QR Code Image</label>
-            <input type="file" id="qr-file" accept="image/*" class="form-control">
+            <label class="form-label">Paste QR Code Image</label>
+            <div id="paste-container" class="paste-area">
+              <div class="paste-instruction">
+                <span class="material-icons">content_paste</span>
+                <p>Take a screenshot of the QR code and paste it here (Ctrl+V or ⌘+V)</p>
+              </div>
+              <img id="pasted-image" style="max-width: 100%; display: none;">
+            </div>
           </div>
           <div class="form-group">
-            <button id="capture-screen" class="btn btn-primary">Capture Screen Area</button>
+            <button id="process-clipboard" class="btn btn-primary">Process Clipboard Image</button>
           </div>
-          <div class="qr-scanner" id="qr-scanner" style="display: none;">
-            <video id="qr-video"></video>
-            <div class="qr-scanner__frame"></div>
+          <div class="form-group" style="margin-top: 20px;">
+            <label class="form-label">Or Upload QR Code Image</label>
+            <input type="file" id="qr-file" accept="image/*" class="form-control">
           </div>
           <div class="form-group" id="qr-result-container" style="display: none;">
             <div class="form-group">
@@ -132,31 +138,8 @@
     </li>
   </template>
 
-  <!-- QR Code Scanner Overlay -->
-  <div class="modal" id="scanner-modal">
-    <div class="modal-content" style="max-width: 800px;">
-      <div class="modal-header">
-        <h3 class="modal-title">Capture QR Code</h3>
-        <button class="btn btn-icon" id="close-scanner-modal">
-          <span class="material-icons">close</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Click and drag to select an area with the QR code:</p>
-        <div id="screenshot-container" style="position: relative; overflow: hidden;">
-          <div id="selection-area" style="position: absolute; border: 2px dashed var(--primary-color); display: none;"></div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn" id="cancel-screenshot">Cancel</button>
-        <button class="btn btn-primary" id="capture-selection">Capture Selection</button>
-      </div>
-    </div>
-  </div>
-
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <script src="config.js"></script>
 </body>
 </html> 
