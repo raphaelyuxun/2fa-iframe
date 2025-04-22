@@ -1,2 +1,3 @@
-# 2fa-iframe
-A sinple 2FA token management system
+# 2FA Iframe Project
+
+使用 Node.js + Express 构建的双页面 2FA 系统...
