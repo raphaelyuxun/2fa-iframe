@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2FA Manager - Display</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>2FA Manager - Display</h1>
+      <a href="/config" class="btn btn-primary">Go to Config Page</a>
+    </header>
+
+    <div class="timer-container">
+      <div class="timer">
+        <div class="timer-value" id="timer-value">30</div>
+        <div class="timer-label">seconds</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Your 2FA Tokens</h2>
+      </div>
+      <div class="card-body">
+        <ul id="otp-list" class="list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template for OTP list item -->
+  <template id="otp-item-template">
+    <li class="otp-item" data-id="">
+      <div class="otp-content">
+        <h3 class="otp-name"></h3>
+        <p class="otp-note"></p>
+        <div class="token"></div>
+      </div>
+      <div class="otp-actions">
+        <button class="btn btn-icon copy-otp-btn" title="Copy to clipboard">
+          <span class="material-icons">content_copy</span>
+        </button>
+      </div>
+    </li>
+  </template>
+
+  <script src="display.js"></script>
+</body>
+</html> 

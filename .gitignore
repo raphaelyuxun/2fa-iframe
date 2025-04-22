@@ -1,0 +1,38 @@
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# Environment
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Server data
+server/data/
+
+# OS specific
+.DS_Store
+Thumbs.db
+.directory
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build
+dist/
+build/
+tmp/
+temp/ 

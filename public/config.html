@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2FA Manager - Configuration</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>2FA Manager - Configuration</h1>
+      <a href="/display" class="btn btn-primary">View Display Page</a>
+    </header>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Add New 2FA Token</h2>
+      </div>
+      <div class="card-body">
+        <div class="tabs">
+          <div class="tab active" data-tab="manual">Manual Entry</div>
+          <div class="tab" data-tab="qrcode">QR Code Scan</div>
+        </div>
+
+        <div class="tab-content active" id="manual">
+          <form id="add-token-form">
+            <div class="form-group">
+              <label for="token-name" class="form-label">Name (required, max 64 chars)</label>
+              <input type="text" id="token-name" class="form-control" placeholder="e.g. Google Account" maxlength="64" required>
+            </div>
+            <div class="form-group">
+              <label for="token-note" class="form-label">Note (optional, max 256 chars)</label>
+              <textarea id="token-note" class="form-control" placeholder="e.g. Work account for company email" maxlength="256" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label for="token-secret" class="form-label">Secret Key (required)</label>
+              <input type="text" id="token-secret" class="form-control" placeholder="e.g. JBSWY3DPEHPK3PXP" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Token</button>
+          </form>
+        </div>
+
+        <div class="tab-content" id="qrcode">
+          <div class="form-group">
+            <label class="form-label">Upload QR Code Image</label>
+            <input type="file" id="qr-file" accept="image/*" class="form-control">
+          </div>
+          <div class="form-group">
+            <button id="capture-screen" class="btn btn-primary">Capture Screen Area</button>
+          </div>
+          <div class="qr-scanner" id="qr-scanner" style="display: none;">
+            <video id="qr-video"></video>
+            <div class="qr-scanner__frame"></div>
+          </div>
+          <div class="form-group" id="qr-result-container" style="display: none;">
+            <div class="form-group">
+              <label for="qr-token-name" class="form-label">Name (required, max 64 chars)</label>
+              <input type="text" id="qr-token-name" class="form-control" placeholder="e.g. Google Account" maxlength="64" required>
+            </div>
+            <div class="form-group">
+              <label for="qr-token-note" class="form-label">Note (optional, max 256 chars)</label>
+              <textarea id="qr-token-note" class="form-control" placeholder="e.g. Work account for company email" maxlength="256" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Secret (detected from QR code)</label>
+              <div class="form-control" id="qr-token-secret" style="background-color: var(--background-color);"></div>
+            </div>
+            <button id="add-qr-token" class="btn btn-primary">Add Token</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">Your 2FA Tokens</h2>
+      </div>
+      <div class="card-body">
+        <ul id="token-list" class="list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secret Modal -->
+  <div class="modal" id="secret-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Secret Key</h3>
+        <button class="btn btn-icon" id="close-modal">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Secret Key:</label>
+          <div class="form-control" id="modal-secret-text"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">QR Code:</label>
+          <div class="text-center">
+            <img id="modal-qr-code" style="max-width: 200px; height: auto;">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="modal-copy-secret">Copy Secret</button>
+        <button class="btn btn-primary" id="modal-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Template for token list item -->
+  <template id="token-item-template">
+    <li class="list-item" data-id="">
+      <div class="list-item-drag-handle">
+        <span class="material-icons">drag_indicator</span>
+      </div>
+      <div class="list-item-content">
+        <h3 class="otp-name"><span class="editable" contenteditable="true"></span></h3>
+        <p class="otp-note"><span class="editable" contenteditable="true"></span></p>
+      </div>
+      <div class="list-item-actions">
+        <button class="btn btn-icon show-secret-btn">
+          <span class="material-icons">visibility</span>
+        </button>
+        <button class="btn btn-icon delete-token-btn">
+          <span class="material-icons">delete</span>
+        </button>
+      </div>
+    </li>
+  </template>
+
+  <!-- QR Code Scanner Overlay -->
+  <div class="modal" id="scanner-modal">
+    <div class="modal-content" style="max-width: 800px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Capture QR Code</h3>
+        <button class="btn btn-icon" id="close-scanner-modal">
+          <span class="material-icons">close</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Click and drag to select an area with the QR code:</p>
+        <div id="screenshot-container" style="position: relative; overflow: hidden;">
+          <div id="selection-area" style="position: absolute; border: 2px dashed var(--primary-color); display: none;"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="cancel-screenshot">Cancel</button>
+        <button class="btn btn-primary" id="capture-selection">Capture Selection</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="config.js"></script>
+</body>
+</html> 

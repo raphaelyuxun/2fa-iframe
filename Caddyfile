@@ -1,5 +1,0 @@
-kocboost.com {
-    reverse_proxy /api/* localhost:3100
-    root * /var/www/2fa-html
-    file_server
-}
