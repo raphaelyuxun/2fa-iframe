@@ -81,6 +81,14 @@ document.addEventListener('DOMContentLoaded', function() {
       const copyButton = otpItem.querySelector('.copy-otp-btn');
       copyButton.dataset.token = otp.token;
       
+      const btnText = copyButton.querySelector('.copy-btn-text');
+      btnText.dataset.originalText = btnText.textContent;
+      
+      // 添加鼠标移出事件监听
+      copyButton.addEventListener('mouseleave', function() {
+        resetButtonState(this);
+      });
+      
       otpList.appendChild(otpItem);
     });
   }
@@ -97,21 +105,69 @@ document.addEventListener('DOMContentLoaded', function() {
     const copyBtn = e.target.closest('.copy-otp-btn');
     if (copyBtn) {
       const token = copyBtn.dataset.token;
-      copyToClipboard(token, copyBtn);
+      copyToClipboard(token, copyBtn, e);
       return;
     }
   }
   
-  function copyToClipboard(text, button) {
+  function copyToClipboard(text, button, event) {
     navigator.clipboard.writeText(text)
       .then(() => {
-        // Add animation to the button
-        button.classList.add('copy-animation');
-        setTimeout(() => {
-          button.classList.remove('copy-animation');
-        }, 500);
+        // 创建扩散动效
+        createButtonRippleEffect(button, event);
+        
+        // 修改按钮文字
+        const btnText = button.querySelector('.copy-btn-text');
+        btnText.textContent = '已复制！';
+        
+        // 改变按钮样式
+        button.style.backgroundColor = 'var(--primary-color)';
+        button.style.color = 'white';
       })
       .catch(err => console.error('复制失败:', err));
+  }
+  
+  function createButtonRippleEffect(button, event) {
+    // 删除已有的波纹
+    const oldRipple = button.querySelector('.btn-ripple-effect');
+    if (oldRipple) {
+      oldRipple.remove();
+    }
+    
+    // 创建新波纹
+    const ripple = document.createElement('span');
+    ripple.classList.add('btn-ripple-effect');
+    
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height) * 2;
+    
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${event.clientX - rect.left - (size / 2)}px`;
+    ripple.style.top = `${event.clientY - rect.top - (size / 2)}px`;
+    
+    button.appendChild(ripple);
+    
+    // 开始动画
+    ripple.style.animation = 'ripple-expand 0.4s ease-out forwards';
+  }
+  
+  function resetButtonState(button) {
+    // 恢复按钮样式
+    button.style.backgroundColor = '';
+    button.style.color = '';
+    
+    // 恢复按钮文字
+    const btnText = button.querySelector('.copy-btn-text');
+    btnText.textContent = btnText.dataset.originalText;
+    
+    // 删除波纹效果
+    const ripple = button.querySelector('.btn-ripple-effect');
+    if (ripple) {
+      ripple.style.animation = 'ripple-fade 0.2s ease-out forwards';
+      setTimeout(() => {
+        ripple.remove();
+      }, 200);
+    }
   }
   
   function updateTimer() {

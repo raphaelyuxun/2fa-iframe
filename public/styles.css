@@ -83,12 +83,10 @@ body {
   overflow: hidden;
   box-shadow: 0 1px 3px var(--shadow-color);
   margin-bottom: 16px;
-  transition: all var(--transition-duration) ease;
 }
 
 .card:hover {
-  box-shadow: 0 4px 8px var(--shadow-color);
-  transform: translateY(-2px);
+  box-shadow: 0 1px 3px var(--shadow-color);
 }
 
 .card-header {
@@ -475,8 +473,48 @@ body {
   border-top: 2px solid var(--primary-color);
 }
 
+.copy-otp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  background-color: transparent;
+  color: var(--primary-color);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.copy-btn-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .copy-animation {
   animation: copy-pulse 0.5s ease;
+}
+
+.btn-ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background-color: rgba(26, 115, 232, 0.8);
+  transform: scale(0);
+  pointer-events: none;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+.copy-otp-btn .material-icons,
+.copy-otp-btn .copy-btn-text {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-text-transition {
+  transition: opacity 0.15s ease;
 }
 
 @keyframes copy-pulse {
@@ -488,6 +526,19 @@ body {
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes ripple-expand {
+  to {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes ripple-fade {
+  to {
+    opacity: 0;
   }
 }
 
