@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2FA Manager - Display</title>
+  <title>2FA管理器 - 显示看板</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="styles.css">
@@ -11,19 +11,19 @@
 <body>
   <div class="container">
     <header class="header">
-      <h1>2FA Manager - Display</h1>
+      <h1>2FA管理器 - 显示看板</h1>
     </header>
 
     <div class="timer-container">
       <div class="timer">
         <div class="timer-value" id="timer-value">30</div>
-        <div class="timer-label">seconds</div>
+        <div class="timer-label">秒</div>
       </div>
     </div>
 
     <div class="card">
       <div class="card-header">
-        <h2 class="card-title">Your 2FA Tokens</h2>
+        <h2 class="card-title">2FA验证码列表</h2>
       </div>
       <div class="card-body">
         <ul id="otp-list" class="list"></ul>
@@ -40,7 +40,7 @@
         <div class="token"></div>
       </div>
       <div class="otp-actions">
-        <button class="btn btn-icon copy-otp-btn" title="Copy to clipboard">
+        <button class="btn btn-icon copy-otp-btn" title="复制到剪贴板">
           <span class="material-icons">content_copy</span>
         </button>
       </div>

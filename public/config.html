@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>2FA Manager - Configuration</title>
+  <title>2FA管理器 - 配置看板</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono&display=swap">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="styles.css">
@@ -11,69 +11,69 @@
 <body>
   <div class="container">
     <header class="header">
-      <h1>2FA Manager - Configuration</h1>
+      <h1>2FA管理器 - 配置看板</h1>
     </header>
 
     <div class="card">
       <div class="card-header">
-        <h2 class="card-title">Add New 2FA Token</h2>
+        <h2 class="card-title">添加新的2FA验证码</h2>
       </div>
       <div class="card-body">
         <div class="tabs">
-          <div class="tab active" data-tab="manual">Manual Entry</div>
-          <div class="tab" data-tab="qrcode">QR Code Scan</div>
+          <div class="tab active" data-tab="manual">输入2FA密钥</div>
+          <div class="tab" data-tab="qrcode">扫描2FA二维码</div>
         </div>
 
         <div class="tab-content active" id="manual">
           <form id="add-token-form">
             <div class="form-group">
-              <label for="token-name" class="form-label">Name (required, max 64 chars)</label>
-              <input type="text" id="token-name" class="form-control" placeholder="e.g. Google Account" maxlength="64" required>
+              <label for="token-name" class="form-label">名称（必填，最多64个字符）</label>
+              <input type="text" id="token-name" class="form-control" placeholder="例如：谷歌账号" maxlength="64" required>
             </div>
             <div class="form-group">
-              <label for="token-note" class="form-label">Note (optional, max 256 chars)</label>
-              <textarea id="token-note" class="form-control" placeholder="e.g. Work account for company email" maxlength="256" rows="3"></textarea>
+              <label for="token-note" class="form-label">备注（可选，最多256个字符）</label>
+              <textarea id="token-note" class="form-control" placeholder="例如：公司邮箱的工作账号" maxlength="256" rows="3"></textarea>
             </div>
             <div class="form-group">
-              <label for="token-secret" class="form-label">Secret Key (required)</label>
-              <input type="text" id="token-secret" class="form-control" placeholder="e.g. JBSWY3DPEHPK3PXP" required>
+              <label for="token-secret" class="form-label">2FA密钥（必填）</label>
+              <input type="text" id="token-secret" class="form-control" placeholder="例如：JBSWY3DPEHPK3PXP" required>
             </div>
-            <button type="submit" class="btn btn-primary">Add Token</button>
+            <button type="submit" class="btn btn-primary">添加验证码</button>
           </form>
         </div>
 
         <div class="tab-content" id="qrcode">
           <div class="form-group">
-            <label class="form-label">Paste QR Code Image</label>
+            <label class="form-label">粘贴二维码图片</label>
             <div id="paste-container" class="paste-area">
               <div class="paste-instruction">
                 <span class="material-icons">content_paste</span>
-                <p>Take a screenshot of the QR code and paste it here (Ctrl+V or ⌘+V)</p>
+                <p>使用截图工具截取二维码，点击该虚线框，并粘贴图片(Ctrl+V 或 ⌘+V）</p>
               </div>
               <img id="pasted-image" style="max-width: 100%; display: none;">
             </div>
           </div>
           <div class="form-group">
-            <button id="process-clipboard" class="btn btn-primary">Process Clipboard Image</button>
+            <button id="process-clipboard" class="btn btn-primary">识别图片中的二维码</button>
           </div>
           <div class="form-group" style="margin-top: 20px;">
-            <label class="form-label">Or Upload QR Code Image</label>
+            <label class="form-label">或上传二维码图片</label>
             <input type="file" id="qr-file" accept="image/*" class="form-control">
           </div>
           <div class="form-group" id="qr-result-container" style="display: none;">
             <div class="form-group">
-              <label for="qr-token-name" class="form-label">Name (required, max 64 chars)</label>
-              <input type="text" id="qr-token-name" class="form-control" placeholder="e.g. Google Account" maxlength="64" required>
+              <label for="qr-token-name" class="form-label">名称（必填，最多64个字符）</label>
+              <input type="text" id="qr-token-name" class="form-control" placeholder="例如：谷歌账号" maxlength="64" required>
             </div>
             <div class="form-group">
-              <label for="qr-token-note" class="form-label">Note (optional, max 256 chars)</label>
-              <textarea id="qr-token-note" class="form-control" placeholder="e.g. Work account for company email" maxlength="256" rows="3"></textarea>
+              <label for="qr-token-note" class="form-label">备注（可选，最多256个字符）</label>
+              <textarea id="qr-token-note" class="form-control" placeholder="例如：公司邮箱的工作账号" maxlength="256" rows="3"></textarea>
             </div>
             <div class="form-group">
-              <label class="form-label">Secret (detected from QR code)</label>
+              <label class="form-label">2FA密钥（从二维码中检测）</label>
               <div class="form-control" id="qr-token-secret" style="background-color: var(--background-color);"></div>
             </div>
-            <button id="add-qr-token" class="btn btn-primary">Add Token</button>
+            <button id="add-qr-token" class="btn btn-primary">添加验证码</button>
           </div>
         </div>
       </div>
@@ -81,7 +81,7 @@
 
     <div class="card">
       <div class="card-header">
-        <h2 class="card-title">Your 2FA Tokens</h2>
+        <h2 class="card-title">2FA验证码列表</h2>
       </div>
       <div class="card-body">
         <ul id="token-list" class="list"></ul>
@@ -93,26 +93,26 @@
   <div class="modal" id="secret-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">Secret Key</h3>
+        <h3 class="modal-title">2FA密钥</h3>
         <button class="btn btn-icon" id="close-modal">
           <span class="material-icons">close</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label class="form-label">Secret Key:</label>
+          <label class="form-label">2FA密钥：</label>
           <div class="form-control" id="modal-secret-text"></div>
         </div>
         <div class="form-group">
-          <label class="form-label">QR Code:</label>
+          <label class="form-label">二维码：</label>
           <div class="text-center">
             <img id="modal-qr-code" style="max-width: 200px; height: auto;">
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn" id="modal-copy-secret">Copy Secret</button>
-        <button class="btn btn-primary" id="modal-close">Close</button>
+        <button class="btn" id="modal-copy-secret">复制2FA密钥</button>
+        <button class="btn btn-primary" id="modal-close">关闭</button>
       </div>
     </div>
   </div>

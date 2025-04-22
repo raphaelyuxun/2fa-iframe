@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sortedTokens.length === 0) {
       const emptyMessage = document.createElement('li');
       emptyMessage.className = 'list-item';
-      emptyMessage.textContent = 'No tokens added yet. Use the form above to add your first 2FA token.';
+      emptyMessage.textContent = '尚无验证码，请使用上方表单添加2FA验证码。';
       tokenList.appendChild(emptyMessage);
       return;
     }
@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Failed to add token');
+        throw new Error('添加验证码失败');
       }
       return response.json();
     })
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchTokens();
       }
     })
-    .catch(error => console.error('Error adding token:', error));
+    .catch(error => console.error('添加验证码出错:', error));
   }
 
   function handleTokenListClick(e) {
@@ -174,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const listItem = deleteBtn.closest('.list-item');
       const tokenId = listItem.dataset.id;
       
-      if (confirm('Are you sure you want to delete this token?')) {
+      if (confirm('您确定要删除此验证码吗？')) {
         deleteToken(tokenId);
       }
       
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Failed to delete token');
+        throw new Error('删除验证码失败');
       }
       return response.json();
     })
@@ -207,14 +207,14 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchTokens();
       }
     })
-    .catch(error => console.error('Error deleting token:', error));
+    .catch(error => console.error('删除验证码出错:', error));
   }
 
   function showSecret(id) {
     fetch(`/api/2fa/${id}/secret`)
       .then(response => {
         if (!response.ok) {
-          throw new Error('Failed to fetch secret');
+          throw new Error('获取密钥失败');
         }
         return response.json();
       })
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
         modalQrCode.src = data.qrCode;
         openModal(secretModal);
       })
-      .catch(error => console.error('Error fetching secret:', error));
+      .catch(error => console.error('获取密钥出错:', error));
   }
 
   function handleContentEditableBlur(e) {
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Failed to reorder tokens');
+        throw new Error('修改验证码排序失败');
       }
       return response.json();
     })
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fetchTokens();
       }
     })
-    .catch(error => console.error('Error reordering tokens:', error));
+    .catch(error => console.error('修改验证码排序出错:', error));
   }
 
   function switchTab(tabId) {
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function() {
   
   function processClipboardImage() {
     if (!clipboardImage) {
-      alert('Please paste an image first (Ctrl+V or ⌘+V)');
+      alert('请先点击上方区域并粘贴图片(Ctrl+V 或 ⌘+V）');
       return;
     }
     
@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (code) {
         processQrCodeResult(code.data);
       } else {
-        alert('No QR code found in the image. Please try again.');
+        alert('图片中未找到二维码。请重试。');
       }
     };
     image.src = imageUrl;
@@ -391,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // Try to parse the otpauth URL
       const url = new URL(data);
       if (url.protocol !== 'otpauth:') {
-        throw new Error('Not a valid otpauth URL');
+        throw new Error('无效的otpauth网址');
       }
       
       // Extract the secret
@@ -399,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function() {
       const secret = params.get('secret');
       
       if (!secret) {
-        throw new Error('No secret found in the QR code');
+        throw new Error('未在二维码中解析到密钥');
       }
       
       // Extract the name
@@ -414,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
       qrResultContainer.style.display = 'block';
     } catch (error) {
       console.error('Error processing QR code:', error);
-      alert('Invalid QR code. Please make sure it\'s a valid 2FA QR code.');
+      alert('无效的二维码，请提供有效的2FA二维码');
     }
   }
 
@@ -423,12 +423,12 @@ document.addEventListener('DOMContentLoaded', function() {
     navigator.clipboard.writeText(secret)
       .then(() => {
         const originalText = modalCopySecretButton.textContent;
-        modalCopySecretButton.textContent = 'Copied!';
+        modalCopySecretButton.textContent = '已复制！';
         setTimeout(() => {
           modalCopySecretButton.textContent = originalText;
         }, 2000);
       })
-      .catch(err => console.error('Failed to copy:', err));
+      .catch(err => console.error('复制失败:', err));
   }
 
   function openModal(modal) {

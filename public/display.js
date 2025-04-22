@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .catch(error => {
         console.error('Error fetching OTPs:', error);
-        otpList.innerHTML = '<li class="otp-item">Error fetching OTPs. Please refresh the page.</li>';
+        otpList.innerHTML = '<li class="otp-item">获取2FA验证码出错，请刷新页面。</li>';
       });
   }
   
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (otps.length === 0) {
       const emptyMessage = document.createElement('li');
       emptyMessage.className = 'otp-item';
-      emptyMessage.textContent = 'No tokens added yet. Go to the config page to add 2FA tokens.';
+      emptyMessage.textContent = '尚无验证码，请前往配置看板添加2FA验证码。';
       otpList.appendChild(emptyMessage);
       return;
     }
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
           button.classList.remove('copy-animation');
         }, 500);
       })
-      .catch(err => console.error('Failed to copy:', err));
+      .catch(err => console.error('复制失败:', err));
   }
   
   function updateTimer() {
