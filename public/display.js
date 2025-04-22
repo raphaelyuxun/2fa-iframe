@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
       })
       .catch(error => {
         console.error('Error fetching OTPs:', error);
-        otpList.innerHTML = '<li class="otp-item">获取2FA验证码出错，请刷新页面。</li>';
+        otpList.innerHTML = '<li class="otp-item">获取&#8201;2FA&#8201;验证码出错，请刷新页面。</li>';
       });
   }
   
@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (otps.length === 0) {
       const emptyMessage = document.createElement('li');
       emptyMessage.className = 'otp-item';
-      emptyMessage.textContent = '尚无验证码，请前往配置看板添加2FA验证码。';
+      emptyMessage.textContent = '尚无验证码，请前往配置看板添加&#8201;2FA&#8201;验证码。';
       otpList.appendChild(emptyMessage);
       return;
     }

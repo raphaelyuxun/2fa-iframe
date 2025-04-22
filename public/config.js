@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (sortedTokens.length === 0) {
       const emptyMessage = document.createElement('li');
       emptyMessage.className = 'list-item';
-      emptyMessage.textContent = '尚无验证码，请使用上方表单添加2FA验证码。';
+      emptyMessage.textContent = '尚无验证码，请使用上方表单添加&#8201;2FA&#8201;验证码。';
       tokenList.appendChild(emptyMessage);
       return;
     }
