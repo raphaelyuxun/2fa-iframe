@@ -19,8 +19,8 @@ mkdir -p /var/www/2fa-iframe/public
 
 # Copy server files
 echo "Copying server files..."
-cp -r ./server.js /opt/2fa-iframe/server/
-cp -r ./package.json /opt/2fa-iframe/server/
+cp -r ./server/server.js /opt/2fa-iframe/server/
+cp -r ./server/package.json /opt/2fa-iframe/server/
 
 # Copy public files
 echo "Copying public files..."
@@ -33,7 +33,7 @@ npm install --production
 
 # Setup Nginx configuration
 echo "Setting up Nginx configuration..."
-cp ./nginx.conf /etc/nginx/sites-available/2fa-iframe
+cp ./server/nginx.conf /etc/nginx/sites-available/2fa-iframe
 ln -sf /etc/nginx/sites-available/2fa-iframe /etc/nginx/sites-enabled/
 
 # Remove default Nginx site if it exists
@@ -47,7 +47,7 @@ certbot --nginx -d kocboost.com --non-interactive --agree-tos -m admin@kocboost.
 
 # Setup systemd service
 echo "Setting up systemd service..."
-cp ./2fa-iframe.service /etc/systemd/system/
+cp ./server/2fa-iframe.service /etc/systemd/system/
 
 # Reload systemd, enable and start services
 echo "Starting services..."
