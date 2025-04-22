@@ -35,13 +35,6 @@ document.addEventListener('DOMContentLoaded', function() {
     onEnd: handleReorder
   });
 
-  // Add ripple effect to buttons
-  document.addEventListener('click', function(e) {
-    if (e.target.closest('.btn')) {
-      createRipple(e);
-    }
-  });
-
   // Event listeners
   addTokenForm.addEventListener('submit', handleTokenSubmit);
   tabButtons.forEach(tab => tab.addEventListener('click', () => switchTab(tab.dataset.tab)));
@@ -444,28 +437,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
   function closeModal(modal) {
     modal.classList.remove('show');
-  }
-
-  function createRipple(event) {
-    const button = event.target.closest('.btn');
-    
-    const circle = document.createElement('span');
-    const diameter = Math.max(button.clientWidth, button.clientHeight);
-    const radius = diameter / 2;
-    
-    const rect = button.getBoundingClientRect();
-    
-    circle.style.width = circle.style.height = `${diameter}px`;
-    circle.style.left = `${event.clientX - rect.left - radius}px`;
-    circle.style.top = `${event.clientY - rect.top - radius}px`;
-    circle.classList.add('ripple');
-    
-    const ripple = button.querySelector('.ripple');
-    if (ripple) {
-      ripple.remove();
-    }
-    
-    button.appendChild(circle);
   }
 
   function shakeElement(element) {

@@ -129,6 +129,8 @@ body {
   transition: all var(--transition-duration) ease;
   background-color: transparent;
   color: var(--primary-color);
+  position: relative;
+  overflow: hidden;
 }
 
 .btn:hover {
@@ -137,6 +139,7 @@ body {
 
 .btn:active {
   background-color: rgba(26, 115, 232, 0.1);
+  transform: scale(0.95);
 }
 
 .btn-primary {
@@ -151,6 +154,7 @@ body {
 
 .btn-primary:active {
   background-color: #1657b5;
+  transform: scale(0.95);
 }
 
 .btn-icon {
