@@ -401,11 +401,10 @@ body {
 
 .token {
   font-family: 'Roboto Mono', monospace;
-  font-size: 28px;
+  font-size: 24px;
   letter-spacing: 1px;
   font-weight: 500;
   color: var(--primary-color);
-  text-align: center;
 }
 
 .token-container {
@@ -435,6 +434,9 @@ body {
 
 .otp-content {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .otp-name {
@@ -446,6 +448,12 @@ body {
 .otp-note {
   font-size: 14px;
   color: var(--text-secondary);
+}
+
+.otp-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .editable {
