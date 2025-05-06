@@ -116,19 +116,38 @@ document.addEventListener('DOMContentLoaded', function() {
         // 创建扩散动效
         createButtonRippleEffect(button, event);
         
-        // 修改按钮文字
+        // 修改按钮文字和样式
         const btnText = button.querySelector('.copy-btn-text');
-        btnText.textContent = '已复制！';
-        
-        // 更改图标为对钩图标
         const icon = button.querySelector('.material-icons');
-        icon.textContent = 'check';
         
-        // 改变按钮样式
+        // 保存原始状态
+        const originalText = btnText.textContent;
+        const originalIcon = icon.textContent;
+        
+        // 更新按钮状态
+        btnText.textContent = '已复制！';
+        icon.textContent = 'check';
         button.style.backgroundColor = 'var(--primary-color)';
         button.style.color = 'white';
+        
+        // 3秒后恢复原始状态
+        setTimeout(() => {
+          resetButtonState(button, originalText, originalIcon);
+        }, 3000);
       })
-      .catch(err => console.error('复制失败:', err));
+      .catch(err => {
+        console.error('复制失败:', err);
+        // 显示错误状态
+        const btnText = button.querySelector('.copy-btn-text');
+        btnText.textContent = '复制失败';
+        button.style.backgroundColor = 'var(--error-color)';
+        button.style.color = 'white';
+        
+        // 2秒后恢复原始状态
+        setTimeout(() => {
+          resetButtonState(button);
+        }, 2000);
+      });
   }
   
   function createButtonRippleEffect(button, event) {
@@ -152,29 +171,39 @@ document.addEventListener('DOMContentLoaded', function() {
     button.appendChild(ripple);
     
     // 开始动画
-    ripple.style.animation = 'ripple-expand 0.4s ease-out forwards';
+    requestAnimationFrame(() => {
+      ripple.style.animation = 'ripple-expand 0.6s ease-out forwards';
+    });
   }
   
-  function resetButtonState(button) {
+  function resetButtonState(button, originalText, originalIcon) {
     // 恢复按钮样式
     button.style.backgroundColor = '';
     button.style.color = '';
     
     // 恢复按钮文字
     const btnText = button.querySelector('.copy-btn-text');
-    btnText.textContent = btnText.dataset.originalText;
+    if (originalText) {
+      btnText.textContent = originalText;
+    } else {
+      btnText.textContent = '复制验证码';
+    }
     
     // 恢复图标
     const icon = button.querySelector('.material-icons');
-    icon.textContent = 'content_copy';
+    if (originalIcon) {
+      icon.textContent = originalIcon;
+    } else {
+      icon.textContent = 'content_copy';
+    }
     
     // 删除波纹效果
     const ripple = button.querySelector('.btn-ripple-effect');
     if (ripple) {
-      ripple.style.animation = 'ripple-fade 0.2s ease-out forwards';
+      ripple.style.animation = 'ripple-fade 0.3s ease-out forwards';
       setTimeout(() => {
         ripple.remove();
-      }, 200);
+      }, 300);
     }
   }
   

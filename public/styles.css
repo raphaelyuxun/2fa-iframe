@@ -482,75 +482,57 @@ body {
 }
 
 .copy-otp-btn {
-  width: auto;
-  height: auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: 1px solid var(--primary-color);
+  gap: 4px;
+  padding: 6px 12px;
   border-radius: 4px;
-  background-color: transparent;
-  color: var(--primary-color);
-  transition: all 0.3s ease;
+  background: var(--surface-color);
+  color: var(--text-color);
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
   position: relative;
   overflow: hidden;
-  min-width: 150px;
 }
 
-.copy-btn-text {
-  font-size: 14px;
-  font-weight: 500;
-  width: 100%;
-  text-align: left;
+.copy-otp-btn:hover {
+  background: var(--hover-color);
 }
 
-.copy-animation {
-  animation: copy-pulse 0.5s ease;
+.copy-otp-btn:active {
+  transform: scale(0.98);
+}
+
+.copy-otp-btn .material-icons {
+  font-size: 16px;
 }
 
 .btn-ripple-effect {
   position: absolute;
   border-radius: 50%;
-  background-color: rgba(26, 115, 232, 0.8);
+  background: rgba(255, 255, 255, 0.3);
   transform: scale(0);
   pointer-events: none;
-  opacity: 0.5;
-  z-index: 0;
-}
-
-.copy-otp-btn .material-icons,
-.copy-otp-btn .copy-btn-text {
-  position: relative;
-  z-index: 1;
-}
-
-.btn-text-transition {
-  transition: opacity 0.15s ease;
-}
-
-@keyframes copy-pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
 }
 
 @keyframes ripple-expand {
-  to {
-    transform: scale(2);
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
     opacity: 0;
   }
 }
 
 @keyframes ripple-fade {
-  to {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
     opacity: 0;
   }
 }
