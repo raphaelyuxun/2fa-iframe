@@ -111,43 +111,55 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   
   function copyToClipboard(text, button, event) {
-    navigator.clipboard.writeText(text)
-      .then(() => {
-        // 创建扩散动效
-        createButtonRippleEffect(button, event);
-        
-        // 修改按钮文字和样式
-        const btnText = button.querySelector('.copy-btn-text');
-        const icon = button.querySelector('.material-icons');
-        
-        // 保存原始状态
-        const originalText = btnText.textContent;
-        const originalIcon = icon.textContent;
-        
-        // 更新按钮状态
-        btnText.textContent = '已复制！';
-        icon.textContent = 'check';
-        button.style.backgroundColor = 'var(--primary-color)';
-        button.style.color = 'white';
-        
-        // 3秒后恢复原始状态
-        setTimeout(() => {
-          resetButtonState(button, originalText, originalIcon);
-        }, 3000);
-      })
-      .catch(err => {
-        console.error('复制失败:', err);
-        // 显示错误状态
-        const btnText = button.querySelector('.copy-btn-text');
-        btnText.textContent = '复制失败';
-        button.style.backgroundColor = 'var(--error-color)';
-        button.style.color = 'white';
-        
-        // 2秒后恢复原始状态
-        setTimeout(() => {
-          resetButtonState(button);
-        }, 2000);
-      });
+    // Create a temporary textarea element
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    
+    try {
+      // Select and copy the text
+      textarea.select();
+      document.execCommand('copy');
+      
+      // 创建扩散动效
+      createButtonRippleEffect(button, event);
+      
+      // 修改按钮文字和样式
+      const btnText = button.querySelector('.copy-btn-text');
+      const icon = button.querySelector('.material-icons');
+      
+      // 保存原始状态
+      const originalText = btnText.textContent;
+      const originalIcon = icon.textContent;
+      
+      // 更新按钮状态
+      btnText.textContent = '已复制！';
+      icon.textContent = 'check';
+      button.style.backgroundColor = 'var(--primary-color)';
+      button.style.color = 'white';
+      
+      // 3秒后恢复原始状态
+      setTimeout(() => {
+        resetButtonState(button, originalText, originalIcon);
+      }, 3000);
+    } catch (err) {
+      console.error('复制失败:', err);
+      // 显示错误状态
+      const btnText = button.querySelector('.copy-btn-text');
+      btnText.textContent = '复制失败';
+      button.style.backgroundColor = 'var(--error-color)';
+      button.style.color = 'white';
+      
+      // 2秒后恢复原始状态
+      setTimeout(() => {
+        resetButtonState(button);
+      }, 2000);
+    } finally {
+      // Clean up
+      document.body.removeChild(textarea);
+    }
   }
   
   function createButtonRippleEffect(button, event) {
